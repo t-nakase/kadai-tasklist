@@ -1,6 +1,5 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
-  before_action :require_user_logged_in, only: [:show, :edit, :update, :destroy]
 
   def index
       if logged_in?
@@ -58,6 +57,9 @@ class TasksController < ApplicationController
   # Strong Parameter
   def set_task
     @task = Task.find(params[:id])
+    if @task.user != current_user
+      redirect_to login_path
+    end
   end
 
   def task_params
