@@ -58,7 +58,12 @@ class TasksController < ApplicationController
   def set_task
     @task = Task.find(params[:id])
     if @task.user != current_user
-      redirect_to login_path
+      if logged_in?
+        @task = current_user.tasks.build
+        redirect_to @task 
+      else
+        redirect_to login_path
+      end
     end
   end
 
