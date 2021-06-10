@@ -1,9 +1,9 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [:show, :edit]
+  before_action :login_check, only: [:show]
 
   def index
       if logged_in?
-       @task = current_user.tasks.build
        @tasks = current_user.tasks.order(id: :desc).page(params[:page])
       else
        redirect_to login_path
@@ -56,6 +56,10 @@ class TasksController < ApplicationController
 
   # Strong Parameter
   def set_task
+    @task = Task.find(params[:id])
+  end
+
+  def login_check
     @task = Task.find(params[:id])
     if @task.user != current_user
       if logged_in?
